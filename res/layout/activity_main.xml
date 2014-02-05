@@ -57,7 +57,7 @@
                 android:layout_height="141dp"
                 android:layout_weight="70"
                 android:ems="10"
-                android:inputType="textMultiLine"
+                android:inputType="textMultiLine|none"
                 android:textAllCaps="true" />
 
         </LinearLayout>

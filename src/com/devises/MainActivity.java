@@ -11,6 +11,7 @@ import com.example.alerter.R;
 import android.os.Bundle;
 import android.R.xml;
 import android.app.Activity;
+import android.content.Intent;
 import android.util.Xml;
 import android.view.Menu;
 import android.view.View;
@@ -25,8 +26,7 @@ import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.TextView;
 
-public class MainActivity extends Activity implements OnItemSelectedListener,
-		OnCheckedChangeListener, OnClickListener {
+public class MainActivity extends Activity implements OnClickListener {
 
 	// variables d'instances : éléments de l'activity
 
@@ -37,7 +37,8 @@ public class MainActivity extends Activity implements OnItemSelectedListener,
 	private RadioButton radioEmail;
 	private RadioButton radioBoth;
 	private Button boutonEnvoyer;
-	private List<String> resultXml = new ArrayList<String>();
+	private List<String> resultTel = new ArrayList<String>();
+	private List<String> resultMail = new ArrayList<String>();
 	private StringBuilder strBuild;
 
 	@Override
@@ -50,21 +51,11 @@ public class MainActivity extends Activity implements OnItemSelectedListener,
 
 		// definition des listeners
 		setListeners();
+		// récupération de la liste d'amis
+		getFriendList();
 
-		//récupération des valeurs du XML
-		XmlPullParser xpp = getResources().getXml(R.xml.amis);
-		XmlParser xmlPars = new XmlParser(xpp);
-		
-		//l'attribut définit la valeur des champs que l'on veut fetcher
-		// on récupère un tableau 
-		resultXml = xmlPars.getNodFromAttribute("telephone");
 		strBuild = new StringBuilder("");
 
-		for (int i = 0; i < resultXml.size(); i++) {
-			strBuild.append(resultXml.get(i));
-
-		}
-		textViewInfo.setText(strBuild);
 	}
 
 	@Override
@@ -75,27 +66,14 @@ public class MainActivity extends Activity implements OnItemSelectedListener,
 	}
 
 	@Override
-	public void onItemSelected(AdapterView<?> arg0, View arg1, int arg2,
-			long arg3) {
-		// TODO Auto-generated method stub
-
-	}
-
-	@Override
-	public void onNothingSelected(AdapterView<?> arg0) {
-		// TODO Auto-generated method stub
-
-	}
-
-	@Override
-	public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-
-	}
-
-	@Override
 	public void onClick(View v) {
 		// a chaque écoute, on active et/ou désactive les champs
-		fieldEnabler(v);
+		if (!v.toString().contains("Send")) {
+			fieldEnabler(v);
+		}
+		else{
+			messageModeChoser(v);
+		}
 
 	}
 
@@ -137,5 +115,45 @@ public class MainActivity extends Activity implements OnItemSelectedListener,
 
 		}
 	}
+
+	public void sendEmail(String[] adress) {
+		String subject = editTextSujet.getText().toString();
+		String body = editTextMessage.getText().toString();
+
+		EmailSender emailSender = new EmailSender();
+		emailSender.sendEmail(adress, subject, body);
+		startActivity(Intent.createChooser(emailSender.getEmailIntent(),
+				"envoi mail..."));
+	}
+
+	public void getFriendList() {
+		// récupération des valeurs du XML
+		XmlPullParser xpp = getResources().getXml(R.xml.amis);
+		XmlParser xmlPars = new XmlParser(xpp);
+
+		// l'attribut définit la valeur des champs que l'on veut fetcher
+		// on récupère un tableau
+		resultTel = xmlPars.getNodFromAttribute("telephone");
+		resultMail = xmlPars.getNodFromAttribute("email");
+	}
+	
+	public void messageModeChoser(View v){
+		
+		if(radioSms.isSelected()){
+			//envoyer SMS
+		}
+		else if(radioEmail.isChecked()){
+			//transformer la liste de résultats XML en tableau de String
+			String[] toSend = (String[]) resultMail.toArray();
+			sendEmail(toSend);
+			textViewInfo.setText("Ca veut envoyer un mail");
+		}
+		else{
+			//envoyer mail + SMS
+		}
+	}
+
+	
+	
 
 }
