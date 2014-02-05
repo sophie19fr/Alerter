@@ -37,7 +37,7 @@ public class MainActivity extends Activity implements OnItemSelectedListener,
 	private RadioButton radioEmail;
 	private RadioButton radioBoth;
 	private Button boutonEnvoyer;
-	private List<String> numeros = new ArrayList<String>();
+	private List<String> resultXml = new ArrayList<String>();
 	private StringBuilder strBuild;
 
 	@Override
@@ -51,14 +51,17 @@ public class MainActivity extends Activity implements OnItemSelectedListener,
 		// definition des listeners
 		setListeners();
 
+		//récupération des valeurs du XML
 		XmlPullParser xpp = getResources().getXml(R.xml.amis);
 		XmlParser xmlPars = new XmlParser(xpp);
 		
-		numeros = xmlPars.getNodFromAttribute("telephone");
+		//l'attribut définit la valeur des champs que l'on veut fetcher
+		// on récupère un tableau 
+		resultXml = xmlPars.getNodFromAttribute("telephone");
 		strBuild = new StringBuilder("");
 
-		for (int i = 0; i < numeros.size(); i++) {
-			strBuild.append(numeros.get(i));
+		for (int i = 0; i < resultXml.size(); i++) {
+			strBuild.append(resultXml.get(i));
 
 		}
 		textViewInfo.setText(strBuild);
