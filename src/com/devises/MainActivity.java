@@ -70,9 +70,8 @@ public class MainActivity extends Activity implements OnClickListener {
 		// a chaque écoute, on active et/ou désactive les champs
 		if (!v.toString().contains("Send")) {
 			fieldEnabler(v);
-		}
-		else{
-			messageModeChoser(v);
+		} else {
+			messageModeChoser();
 		}
 
 	}
@@ -132,28 +131,30 @@ public class MainActivity extends Activity implements OnClickListener {
 		XmlParser xmlPars = new XmlParser(xpp);
 
 		// l'attribut définit la valeur des champs que l'on veut fetcher
+		xmlPars.getNodFromAttribute("telephone", "email");
 		// on récupère un tableau
-		resultTel = xmlPars.getNodFromAttribute("telephone");
-		resultMail = xmlPars.getNodFromAttribute("email");
-	}
-	
-	public void messageModeChoser(View v){
-		
-		if(radioSms.isSelected()){
-			//envoyer SMS
-		}
-		else if(radioEmail.isChecked()){
-			//transformer la liste de résultats XML en tableau de String
-			String[] toSend = (String[]) resultMail.toArray();
-			sendEmail(toSend);
-			textViewInfo.setText("Ca veut envoyer un mail");
-		}
-		else{
-			//envoyer mail + SMS
-		}
+		resultMail = xmlPars.getEmail();
+		resultTel = xmlPars.getTelephone();
+
 	}
 
-	
-	
+	public void messageModeChoser() {
+
+		if (radioSms.isSelected()) {
+			// envoyer SMS
+		} else if (radioEmail.isChecked()) {
+			int taille = resultMail.size();
+
+			String[] toSend = new String[taille];
+
+			for (int i = 0; i < taille; i++) {
+				toSend[i] = resultMail.get(i);
+			}
+			sendEmail(toSend);
+
+		} else {
+			// envoyer mail + SMS
+		}
+	}
 
 }
