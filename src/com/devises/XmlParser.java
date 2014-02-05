@@ -16,7 +16,7 @@ public class XmlParser {
 	}
 
 	//la methode prend en argument un String (l'attribut : str)
-	// et retourne une liste de résultats
+	// et retourne une liste de résultats, et voila
 	public List<String> getNodFromAttribute(String str) {
 		try {
 
