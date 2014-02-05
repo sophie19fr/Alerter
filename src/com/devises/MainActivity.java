@@ -2,6 +2,7 @@ package com.devises;
 
 import java.io.InputStream;
 import java.util.ArrayList;
+import java.util.List;
 
 import org.xmlpull.v1.XmlPullParser;
 
@@ -36,39 +37,31 @@ public class MainActivity extends Activity implements OnItemSelectedListener,
 	private RadioButton radioEmail;
 	private RadioButton radioBoth;
 	private Button boutonEnvoyer;
-	
+	private List<String> numeros = new ArrayList<String>();
+	private StringBuilder strBuild;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
 
-		//valorisation des variables d'instance via les éléments de l'activity
+		// valorisation des variables d'instance via les éléments de l'activity
 		instancier();
-		
-		//definition des listeners
+
+		// definition des listeners
 		setListeners();
+
+		XmlPullParser xpp = getResources().getXml(R.xml.amis);
+		XmlParser xmlPars = new XmlParser(xpp);
 		
-		try{
-			XmlPullParser xpp = getResources().getXml(R.xml.amis);
-		
-			while(xpp.getEventType() != XmlPullParser.END_DOCUMENT){
-				if(xpp.getEventType() == XmlPullParser.START_TAG){
-					
-					if(xpp.getAttributeCount() > 0){
-						
-						xpp.getAttributeValue(null, "telephone");
-					}
-				}
-				
-				xpp.next();
-			}
-			
-		}catch(Exception e){
-			
+		numeros = xmlPars.getNodFromAttribute("telephone");
+		strBuild = new StringBuilder("");
+
+		for (int i = 0; i < numeros.size(); i++) {
+			strBuild.append(numeros.get(i));
+
 		}
-		
-		
+		textViewInfo.setText(strBuild);
 	}
 
 	@Override
@@ -93,18 +86,15 @@ public class MainActivity extends Activity implements OnItemSelectedListener,
 
 	@Override
 	public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-		
-		
 
 	}
-	
+
 	@Override
 	public void onClick(View v) {
-		//a chaque écoute, on active et/ou désactive les champs
+		// a chaque écoute, on active et/ou désactive les champs
 		fieldEnabler(v);
-		
-	}
 
+	}
 
 	public void instancier() {
 		// valorisation des variables d'instance via les éléments de l'activity
@@ -115,39 +105,34 @@ public class MainActivity extends Activity implements OnItemSelectedListener,
 		radioEmail = (RadioButton) findViewById(R.id.radio1);
 		radioBoth = (RadioButton) findViewById(R.id.radio2);
 		boutonEnvoyer = (Button) findViewById(R.id.buttonSend);
-		
-		//par défaut le sujet est désactivé (pour les SMS)
+
+		// par défaut le sujet est désactivé (pour les SMS)
 		editTextSujet.setEnabled(false);
 		// on met donc le focus sur le message
 		editTextMessage.requestFocus();
 	}
-	
-	public void setListeners(){
+
+	public void setListeners() {
 		radioSms.setOnClickListener(this);
 		radioEmail.setOnClickListener(this);
 		radioBoth.setOnClickListener(this);
 		boutonEnvoyer.setOnClickListener(this);
 	}
-	
-	public void fieldEnabler(View v){
-		if(v.toString().contains("radio0")){
+
+	public void fieldEnabler(View v) {
+		if (v.toString().contains("radio0")) {
 			editTextSujet.setEnabled(false);
 			editTextMessage.requestFocus();
-		}
-		else if(v.toString().contains("radio1")){
+		} else if (v.toString().contains("radio1")) {
 			editTextSujet.setEnabled(true);
 			editTextSujet.requestFocus();
-		}
-		else if(v.toString().contains("radio2")){
+		} else if (v.toString().contains("radio2")) {
 			editTextSujet.setEnabled(true);
 			editTextSujet.requestFocus();
-		}
-		else{
+		} else {
 			textViewInfo.setText(v.toString());
-			
 
 		}
 	}
 
-	
 }
