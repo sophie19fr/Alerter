@@ -25,6 +25,8 @@ import android.widget.EditText;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.TextView;
+import android.widget.Toast;
+import android.telephony.SmsManager;
 
 public class MainActivity extends Activity implements OnClickListener {
 
@@ -139,8 +141,11 @@ public class MainActivity extends Activity implements OnClickListener {
 	
 	public void messageModeChoser(View v){
 		
-		if(radioSms.isSelected()){
+		if(radioSms.isChecked()){
 			//envoyer SMS
+			SMSSender sms = new SMSSender();
+			sms.sendSMS(resultTel, editTextMessage);
+	        Toast.makeText(this, "Votre message à bien été envoyé", Toast.LENGTH_LONG).show();
 		}
 		else if(radioEmail.isChecked()){
 			//transformer la liste de résultats XML en tableau de String
