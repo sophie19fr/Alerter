@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<amis>
+
+    <ami
+        email="pb@gmail.com"
+        nom="Buguet"
+        prenom="Pascal"
+        telephone="0900000000" />
+
+    <ami
+        email="pb@free.fr"
+        nom="Buguete"
+        prenom="Pascale"
+        telephone="0700000000" />
+
+</amis>
